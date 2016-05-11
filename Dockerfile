@@ -20,4 +20,4 @@ RUN wget -q -O osu.tar.gz \
 
 WORKDIR /usr/local/libexec/osu-micro-benchmarks/mpi/pt2pt
 
-CMD ["mpiexec", "-n", "2", "./osu_bw"]
+CMD ["mpiexec", "-n", "2", "-bind-to", "core", "./osu_bw"]
