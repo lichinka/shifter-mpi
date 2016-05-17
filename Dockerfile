@@ -23,8 +23,6 @@ RUN wget -q -O osu.tar.gz \
     ./configure --prefix=${HOME} CC=$( which mpicc ) CXX=$( which mpicxx ) && \
     make                                                 && \
     make install                                         && \
-    cd ..                                                && \
-    rm -rf osu-micro-benchmarks-5.3 osu.tar.gz
 
 # SSH configuration
 ADD  ssh/id_rsa.pub .ssh/authorized_keys
