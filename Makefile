@@ -1,8 +1,10 @@
 NAME = shifter-mpi
-VERSION = 0.3
+VERSIONS = 0.3 nersc
 
-all:
-	docker build --rm=true --tag=$(NAME):$(VERSION) .
+all: $(VERSIONS)
+
+$(VERSIONS):
+	docker build --rm=true --tag=$(NAME):$@ --file=Dockerfile.$@ .
 
 clean:
-	docker rmi $(NAME):$(VERSION)
+	$( shell docker rmi $( docker images -q $(NAME) ) )
