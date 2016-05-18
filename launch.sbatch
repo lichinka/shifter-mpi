@@ -5,17 +5,6 @@
 #========================================
 # The script runs an OSU MPI bandwidth benchmark from a Shifter container
 #
-# Input files:
-#  GTH_BASIS_SETS
-#  H2O-32.inp
-#  POTENTIAL
-# 
-# Output file:
-#  $outdir/$SLURM_JOB_ID.out
-#
-# Log file for perfomance:
-#  $logdir/$SLURM_JOB_ID.log
-#
 #========================================
 # SLURM VARIABLES (APPLICATION SPECIFIC)
 #========================================
@@ -23,7 +12,7 @@
 #SBATCH --nodes=2-2
 #SBATCH --ntasks-per-node=1
 #SBATCH --time=00:05:00
-#SBATCH --image=docker:lichinka/shifter-mpi:0.2
+#SBATCH --image=docker:lichinka/shifter-mpi:0.3
 #
 #========================================
 # MODULE SETUP
@@ -31,7 +20,7 @@
 if [ -z "$( module list 2>&1 | grep PrgEnv-gnu )" ]; then
     module swap PrgEnv-cray PrgEnv-gnu;
 fi
-module switch cray-mpich cray-mpich/7.0.5;
+module load cray-mpich/7.3.2;
 module load shifter;
 #
 #========================================
@@ -61,7 +50,7 @@ echo "done"
 #========================================
 # RUN
 #========================================
-srun shifter --volume=${JOB_LIBDIR}:/usr/lib/x86_64-linux-gnu /home/docker/libexec/osu-micro-benchmarks/mpi/pt2pt/osu_bw
+srun shifter --volume=${JOB_LIBDIR}:/usr/local/shifter/lib /usr/local/libexec/osu-micro-benchmarks/mpi/pt2pt/osu_bw
 
 #
 #========================================
