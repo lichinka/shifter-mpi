@@ -38,8 +38,7 @@ module load shifter;
 # RUNTIME SETUP
 #========================================
 JOB_LIBDIR="$( pwd )/.shifter-${SLURM_JOBID}"
-#JOB_SYSDIR="/opt/cray/wlm_detect/default/lib64 ${CRAY_MPICH2_DIR}/lib /opt/cray/pmi/default/lib64 /opt/cray/ugni/default/lib64 /opt/cray/udreg/default/lib64 /opt/cray/xpmem/default/lib64 /opt/cray/alps/default/lib64 /opt/gcc/4.9.3/snos/lib64"
-JOB_SYSDIR="${GCC_PATH}/snos/lib64 ${CRAY_MPICH2_DIR}/lib /opt/cray/pmi/default/lib64 /opt/cray/ugni/default/lib64 /opt/cray/udreg/default/lib64 /opt/cray/xpmem/default/lib64 /opt/cray/alps/default/lib64 /opt/cray/wlm_detect/default/lib64/"
+JOB_SYSDIR="${CRAY_MPICH2_DIR}/lib /opt/cray/pmi/default/lib64 /opt/cray/ugni/default/lib64 /opt/cray/udreg/default/lib64 /opt/cray/xpmem/default/lib64 /opt/cray/alps/default/lib64 /opt/cray/wlm_detect/default/lib64/"
 
 echo -n "Checking system directories ... "
 for d in ${JOB_SYSDIR}; do
@@ -62,7 +61,7 @@ echo "done"
 #========================================
 # RUN
 #========================================
-srun shifter --volume=${JOB_LIBDIR}:/usr/lib/x86_64-linux-gnu ldd /home/docker/libexec/osu-micro-benchmarks/mpi/pt2pt/osu_bw
+srun shifter --volume=${JOB_LIBDIR}:/usr/lib/x86_64-linux-gnu /home/docker/libexec/osu-micro-benchmarks/mpi/pt2pt/osu_bw
 
 #
 #========================================
