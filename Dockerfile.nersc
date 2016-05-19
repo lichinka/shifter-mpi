@@ -9,18 +9,22 @@ RUN yum upgrade -y && \
 WORKDIR /
 
 ## replace psdm mpi4py with cray-tuned one
-#ADD optcray_alva.tar /
-ADD shifter_libs.tgz /usr/local
+ADD shifter_libs.tgz /
 ADD mpi4py-1.3.1.tar.gz /usr/src
 ADD mpi.cfg /usr/src/mpi4py-1.3.1/
-RUN cd /usr/src/mpi4py-1.3.1 && \
-    chmod -R a+rX /usr/local/shifter && \
-    chown -R root:root /usr/local/shifter && \
-    python setup.py build && \
+RUN cd /usr/src/mpi4py-1.3.1                && \
+    chmod -R a+rX /opt/cray                 && \
+    chown -R root:root /opt/cray            && \
+    python setup.py build                   && \
     export MPI4PY_LIB=$( rpm -ql $(rpm -qa | grep mpi4py | head -1) | egrep "lib$" ) && \
-    export MPI4PY_DIR="${MPI4PY_LIB}/.." && \
-    python setup.py install && \
-    cd / && rm -rf /usr/src/mpi4py-1.3.1 && \
-    printf "/usr/local/shifter/lib/libwlm_detect.so.0\n" >> /etc/ld.so.preload && \
-    printf "/usr/local/shifter/lib\n" >> /etc/ld.so.conf && \  
+    export MPI4PY_DIR="${MPI4PY_LIB}/.."    && \
+    python setup.py install                 && \
+    cd / && rm -rf /usr/src/mpi4py-1.3.1    && \
+    printf "/opt/cray/wlm_detect/default/libwlm_detect.so.0\n" >> /etc/ld.so.preload && \
+    printf "/opt/cray/mpt/default/gni/mpich-gnu/4.9/lib\n" >> /etc/ld.so.conf && \
+    printf "/opt/cray/pmi/default/lib64\n"   >> /etc/ld.so.conf && \
+    printf "/opt/cray/ugni/default/lib64\n"  >> /etc/ld.so.conf && \
+    printf "/opt/cray/udreg/default/lib64\n" >> /etc/ld.so.conf && \
+    printf "/opt/cray/xpmem/default/lib64\n" >> /etc/ld.so.conf && \
+    printf "/opt/cray/alps/default/lib64\n"  >> /etc/ld.so.conf && \
     ldconfig
