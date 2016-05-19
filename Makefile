@@ -7,4 +7,4 @@ $(VERSIONS):
 	docker build --rm=true --tag=$(NAME):$@ --file=Dockerfile.$@ .
 
 clean:
-	$( shell docker rmi $( docker images -q $(NAME) ) )
+	@$(foreach ver,$(VERSIONS),docker rmi shifter-mpi:$(ver);)
