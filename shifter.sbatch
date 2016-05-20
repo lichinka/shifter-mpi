@@ -27,11 +27,11 @@ module load cray-mpich-abi;
 #========================================
 # RUNTIME SETUP
 #========================================
-JOB_LIBDIR="$( pwd )/.shifter-${SLURM_JOBID}"
-JOB_SYSDIR="${CRAY_LD_LIBRARY_PATH} /opt/cray/wlm_detect/default/lib64/"
+JOB_LIBDIR="${SCRATCH}/.shifter-${SLURM_JOBID}"
+JOB_SYSDIR="${CRAY_LD_LIBRARY_PATH}:/opt/cray/wlm_detect/default/lib64/"
 
 echo -n "Checking system directories ... "
-for d in ${JOB_SYSDIR}; do
+for d in $( echo "${JOB_SYSDIR}" | tr ':' ' ' ); do
     if [ ! -d ${d} ]; then
         echo "<${d}> does not exist"
         exit 1
@@ -41,7 +41,7 @@ echo "done"
 
 echo -n "Gathering required libraries ... "
 mkdir ${JOB_LIBDIR}
-for d in ${JOB_SYSDIR}; do
+for d in $( echo "${JOB_SYSDIR}" | tr ':' ' ' ); do
     rsync -a ${d}/* ${JOB_LIBDIR}/
 done
 echo "done"
