@@ -1,0 +1,36 @@
+FROM python:3.4-slim 
+
+RUN apt-get update                          && \
+    apt-get install -y file             \
+                       g++              \
+                       gcc              \
+                       gfortran         \
+                       make             \
+                       wget             \
+                    --no-install-recommends
+
+# install MPICH
+ADD src/mpich-3.2.tar.gz /usr/local/src
+RUN cd /usr/local/src/mpich-3.2       && \
+    ./configure --prefix=/usr/local   && \
+    make -j4                          && \
+    make install
+
+# install OSU Micro-Benchmarks
+ENV CC gcc
+ENV CXX g++
+ENV F90 gfortran
+ENV MPIF90 mpif90
+ADD src/osu-micro-benchmarks-5.3.tar.gz /usr/local/src
+RUN cd /usr/local/src/osu-micro-benchmarks-5.3     && \
+    ./configure --prefix=/usr/local CC=$( which mpicc ) CXX=$( which mpicxx ) && \
+    make                                           && \
+    make install
+
+## cleanup
+#RUN rm -r /usr/local/src/mpich-3.2                && \
+#    rm -r /usr/local/src/osu-micro-benchmarks-5.3
+
+WORKDIR /usr/local/libexec/osu-micro-benchmarks/mpi/pt2pt
+
+CMD ["mpiexec", "-n", "2", "-bind-to", "core", "./osu_bw"]
