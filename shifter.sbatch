@@ -3,7 +3,8 @@
 #========================================
 # DESCRIPTION
 #========================================
-# The script runs an OSU MPI bandwidth benchmark from a Shifter container
+# The script runs an OSU MPI bandwidth 
+# benchmark from a Shifter container
 #
 #========================================
 # SLURM VARIABLES (APPLICATION SPECIFIC)
@@ -12,7 +13,7 @@
 #SBATCH --nodes=2-2
 #SBATCH --ntasks-per-node=1
 #SBATCH --time=00:05:00
-#SBATCH --image=docker:lichinka/shifter-mpi:cscs.0.4
+#SBATCH --partition=bigmem
 #
 #========================================
 # MODULE SETUP
@@ -20,7 +21,7 @@
 if [ -z "$( module list 2>&1 | grep PrgEnv-gnu )" ]; then
     module swap PrgEnv-cray PrgEnv-gnu;
 fi
-module load shifter;
+module load shifter/20160422;
 module unload cray-mpich;
 module load cray-mpich-abi;
 #
@@ -51,7 +52,7 @@ echo "done"
 # RUN
 #========================================
 export LD_LIBRARY_PATH=${JOB_LIBDIR}
-srun shifter /usr/local/libexec/osu-micro-benchmarks/mpi/pt2pt/osu_bw
+srun shifter -v --image=docker:lichinka/shifter-mpi:cscs.0.4 /usr/local/libexec/osu-micro-benchmarks/mpi/pt2pt/osu_bw
 
 #
 #========================================
