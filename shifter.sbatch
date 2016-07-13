@@ -13,7 +13,6 @@
 #SBATCH --nodes=2-2
 #SBATCH --ntasks-per-node=1
 #SBATCH --time=00:05:00
-#SBATCH --partition=bigmem
 #
 #========================================
 # MODULE SETUP
@@ -21,7 +20,7 @@
 if [ -z "$( module list 2>&1 | grep PrgEnv-gnu )" ]; then
     module swap PrgEnv-cray PrgEnv-gnu;
 fi
-module load shifter/20160422;
+module load shifter/20160627;
 module unload cray-mpich;
 module load cray-mpich-abi;
 #
@@ -43,7 +42,7 @@ echo "done"
 echo -n "Gathering required libraries ... "
 mkdir ${JOB_LIBDIR}
 for D in $( echo "${JOB_SYSDIR}" | tr ':' ' ' ); do
-    rsync -aL ${D}/* ${JOB_LIBDIR}/
+    rsync -aL --exclude="*.a" ${D}/* ${JOB_LIBDIR}/
 done
 echo "done"
 
