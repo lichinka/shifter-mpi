@@ -1,4 +1,4 @@
-FROM python:3.4-slim 
+FROM python:3.4-slim
 
 RUN apt-get update                          && \
     apt-get install -y file             \
@@ -27,9 +27,9 @@ RUN cd /usr/local/src/osu-micro-benchmarks-5.3     && \
     make                                           && \
     make install
 
-## cleanup
-#RUN rm -r /usr/local/src/mpich-3.2                && \
-#    rm -r /usr/local/src/osu-micro-benchmarks-5.3
+# cleanup
+RUN rm -r /usr/local/src/mpich-3.2                && \
+    rm -r /usr/local/src/osu-micro-benchmarks-5.3
 
 WORKDIR /usr/local/libexec/osu-micro-benchmarks/mpi/pt2pt
 
