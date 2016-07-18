@@ -1,0 +1,37 @@
+FROM debian:jessie
+
+RUN apt-get update                          && \
+    apt-get install -y bison            \
+                       file             \
+                       g++              \
+                       gcc              \
+                       gfortran         \
+                       libibverbs-dev   \
+                       make             \
+                    --no-install-recommends
+
+# install MVAPICH2 from source
+ADD src/mvapich2-2.1.tar.gz /usr/local/src
+RUN cd /usr/local/src/mvapich2-2.1                                   && \
+    ./configure --prefix=/usr/local --disable-static --disable-mcast && \
+    make -j4                                                         && \
+    make install
+
+# install OSU Micro-Benchmarks
+ENV CC gcc
+ENV CXX g++
+ENV F90 gfortran
+ENV MPIF90 mpif90
+ADD src/osu-micro-benchmarks-5.3.tar.gz /usr/local/src
+RUN cd /usr/local/src/osu-micro-benchmarks-5.3                                && \
+    ./configure --prefix=/usr/local CC=$( which mpicc ) CXX=$( which mpicxx ) && \
+    make                                                                      && \
+    make install
+
+# cleanup
+RUN rm -r /usr/local/src/mvapich2-2.1             && \
+    rm -r /usr/local/src/osu-micro-benchmarks-5.3
+
+WORKDIR /usr/local/libexec/osu-micro-benchmarks/mpi/pt2pt
+
+CMD ["mpiexec", "-n", "2", "-bind-to", "core", "./osu_bw"]
