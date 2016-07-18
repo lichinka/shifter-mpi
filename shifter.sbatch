@@ -50,7 +50,8 @@ echo "done"
 #========================================
 # RUN
 #========================================
-srun shifter -v --volume=${JOB_LIBDIR}:/usr/local/lib --image=docker:lichinka/shifter-mpi:cscs.0.4 /bin/bash -c "LD_LIBRARY_PATH=/usr/local/lib /usr/local/libexec/osu-micro-benchmarks/mpi/pt2pt/osu_bw"
+#srun shifter -v --volume=${JOB_LIBDIR}:/usr/local/lib --image=docker:lichinka/shifter-mpi:cscs.0.4 /bin/bash -c "LD_LIBRARY_PATH=/usr/local/lib /usr/local/libexec/osu-micro-benchmarks/mpi/pt2pt/osu_bw"
+srun shifter --image=docker:lichinka/shifter-mpi:cscs.0.4 /bin/bash -c "/usr/local/libexec/osu-micro-benchmarks/mpi/pt2pt/osu_bw"
 
 #
 #========================================
