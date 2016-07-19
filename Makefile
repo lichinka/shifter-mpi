@@ -1,5 +1,5 @@
 NAME = shifter-mpi
-VERSIONS = 0.4 0.5 nersc
+VERSIONS = 0.4 0.5 0.6 nersc
 
 all: $(VERSIONS)
 
