@@ -1,6 +1,5 @@
 #
-# Debian Jessie container with MPICH 3.2 built from source
-# and the OSU benchmarks 5.3
+# Debian Jessie container with MPICH 3.2 and the OSU benchmarks 5.3
 #
 FROM debian:jessie
 
@@ -9,18 +8,14 @@ RUN apt-get update                          && \
                        g++              \
                        gcc              \
                        gfortran         \
+                       libmpich-dev     \
                        make             \
-                       wget             \
+                       mpich            \
                     --no-install-recommends
 
-# install MPICH
-ADD src/mpich-3.2.tar.gz /usr/local/src
-RUN cd /usr/local/src/mpich-3.2       && \
-    ./configure --prefix=/usr/local   && \
-    make -j4                          && \
-    make install
-
-# install OSU Micro-Benchmarks
+#
+# install the OSU Micro-Benchmarks from source
+#
 ENV CC gcc
 ENV CXX g++
 ENV F90 gfortran
@@ -32,8 +27,7 @@ RUN cd /usr/local/src/osu-micro-benchmarks-5.3     && \
     make install
 
 # cleanup
-RUN rm -r /usr/local/src/mpich-3.2                && \
-    rm -r /usr/local/src/osu-micro-benchmarks-5.3
+RUN rm -r /usr/local/src/osu-micro-benchmarks-5.3
 
 WORKDIR /usr/local/libexec/osu-micro-benchmarks/mpi/pt2pt
 
